@@ -15,8 +15,8 @@ export const useDraggable = (
   const [finalInfoAfterDrag, setFinalInfoAfterDrag] =
     useState<UpdatePositionItemInfo | null>(null);
 
-  const onMouseDown = useCallback(
-    (event: React.MouseEvent) => {
+  const onPointerDown = useCallback(
+    (event: React.PointerEvent) => {
       setStartDragPosition({
         x: event.clientX - initialX,
         y: event.clientY - initialY,
@@ -26,8 +26,8 @@ export const useDraggable = (
     [initialX, initialY]
   );
 
-  const onMouseMove = useCallback(
-    (event: MouseEvent) => {
+  const onPointerMove = useCallback(
+    (event: PointerEvent) => {
       if (isDragging) {
         const newX = event.clientX - startDragPosition.x;
         const newY = event.clientY - startDragPosition.y;
@@ -46,7 +46,7 @@ export const useDraggable = (
     [id, isDragging, startDragPosition, updatePosition, totalHeight, canvasSize]
   );
 
-  const onMouseUp = useCallback(() => {
+  const onPointerUp = useCallback(() => {
     setIsDragging(false);
     if (finalInfoAfterDrag) {
       updatePosition(finalInfoAfterDrag, true);
@@ -55,18 +55,18 @@ export const useDraggable = (
 
   React.useEffect(() => {
     if (isDragging) {
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
     } else {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
     }
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
     };
-  }, [isDragging, onMouseMove, onMouseUp]);
+  }, [isDragging, onPointerMove, onPointerUp]);
 
-  return { onMouseDown };
+  return { onPointerDown };
 };
